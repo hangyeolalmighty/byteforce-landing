@@ -1,0 +1,65 @@
+# BYTEFORCE — AI Consulting & IT Services
+
+> BYTEFORCE is an AI consulting and full-stack IT services company based in Busan, South Korea. Founded by Hangyeol Lee (이한결), a veteran with 32+ years in IT, including roles as Seoul Institute AI Advisor and Ex-Nexon executive. BYTEFORCE designs the point where AI actually works — bridging technology and strategy for real business outcomes.
+
+## Services
+
+- **Generative AI Consulting**: Claude, GPT, Gemini, Grok — industry-specific AI selection and real-world deployment
+- **AI Workflow Automation**: n8n, Zapier, Make, custom pipelines — eliminate repetitive tasks, reduce costs
+- **Enterprise AI Solutions**: AI chatbots, CRM integration, data analytics dashboards, customer service automation
+- **Vibe Coding (Web/App/MVP Development)**: Design through conversation, build with AI — from landing pages to full-stack apps
+- **Multilingual Services**: Korean, English, Japanese, Russian — 4-language localization support
+- **Digital Campaign Strategy**: Election campaigns, political digital strategy, web platforms for public campaigns
+
+## Portfolio (20+ Live Projects)
+
+- 이순신 AI (yisunsin.ai) — Historical figure AI interactive experience
+- ToneSnap (tonesnap.replit.app) — Psychology-based AI text tone converter
+- 금호고속 AI 챗봇 (kumhobuslines) — 5-language AI customer support
+- K-Style Translator (ksoul.app) — Russian↔Korean sentiment translation AI
+- Vybe.prof (vybe.prof) — AI emotion tone + Gun.js P2P + dual payment
+- 왕도깨비 Curations (왕도깨비.com) — 7-locale luxury goods trading platform
+- Svoy.kr (svoy.kr) — Cyberpunk TON crypto badge
+- Elancia World (elancia.world) — Classic RPG interactive branding
+- K-Fortune (ksoolsa.replit.app) — Korean fortune-telling global matching platform
+- ALL TACT English (all-tact-english.replit.app) — English education all-in-one with Lead CRM + No-code CMS + A/B testing
+- AI Music Studio (mymusic.ai.kr) — AI music production education & consulting
+- PaybackBit (firidin.replit.app) — AI referral partner platform with real-time crypto market insights
+- Chaos Slayer (7stars.run) — Cosmic gamification productivity app
+- XXXAI (xxxai.replit.app) — AI-native social content platform with real-time sentiment analysis
+- Backbit x Jadoo (backbit) — Crypto fee optimization + 3D data visualization
+- 리뷰 자동화 (cosmetic-review-hub) — Shopify+AI review automation with AI moderation
+- 원고팩토리 (ad-move-content) — AI YouTube script multi-conversion SaaS
+- 라연이세상 (rayeon-world) — Kids web OS with AI friend + games
+- Marina AI (code-refine) — AI education interactive landing
+- 부산 교육감 캠페인 (elitebusan.com) — Busan education superintendent election digital campaign
+
+## Company Information
+
+- **CEO**: 이한결 (Hangyeol Lee) — 32+ years IT, Seoul Institute AI Advisory, Ex-Nexon, Presidential Campaign Digital
+- **Location**: Ocean Tower #608, 203 Haeundae-haebyeon-ro, Haeundae-gu, Busan, South Korea
+- **Email**: ceo@byteforce.ai.kr
+- **Phone**: +82-10-9741-9217
+- **Website**: https://byteforce.ai.kr
+- **Languages**: Korean, English, Japanese, Russian
+- **Hours**: Monday–Friday 09:00–18:00 KST
+
+## FAQ
+
+- Q: What AI models does BYTEFORCE work with?
+  A: We work with all major AI models including Claude (Anthropic), GPT (OpenAI), Gemini (Google), and Grok (xAI). We help businesses select the best model for their specific use case.
+
+- Q: Can BYTEFORCE help automate my business workflows?
+  A: Yes. We specialize in AI workflow automation using tools like n8n, Zapier, and Make, as well as custom automation pipelines tailored to your business processes.
+
+- Q: Does BYTEFORCE build websites and apps?
+  A: Yes. We offer full-stack web and app development using modern frameworks (React, Next.js, etc.) with AI-assisted "vibe coding" methodology — from landing pages to complex MVPs.
+
+- Q: What languages does BYTEFORCE support?
+  A: We provide services in Korean, English, Japanese, and Russian, enabling true multilingual product development and localization.
+
+- Q: Where is BYTEFORCE located?
+  A: We are based in Haeundae, Busan, South Korea — Ocean Tower #608, right on the beachfront. We serve clients nationwide and internationally.
+
+- Q: Does BYTEFORCE handle digital campaigns?
+  A: Yes. We have experience running digital election campaigns, including the Busan Education Superintendent election campaign (elitebusan.com), as well as presidential campaign digital strategy.
