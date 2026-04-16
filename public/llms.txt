@@ -34,6 +34,12 @@
 - Marina AI (code-refine) — AI education interactive landing
 - 부산 교육감 캠페인 (elitebusan.com) — Busan education superintendent election digital campaign
 
+## Solutions (Own Products)
+
+- **VibeSec** (byteforceai.github.io/vibesec) — Vibe coding security audit service. Human engineers review AI-coded apps across 312 checkpoints. McKinsey-grade reports. LIVE.
+- **Heavy Match** (heavy-match.vercel.app) — B2B heavy equipment dispatch matching platform. Connects construction companies with equipment providers in 60 seconds. 6 user roles, automated billing. LIVE.
+- **Vibe Coding Arena** (dreamteam.ai.kr) — AI-powered vibe coding education platform. Learn to build apps through conversation with AI. Project-based curriculum. COMING SOON.
+
 ## Company Information
 
 - **CEO**: 이한결 (Hangyeol Lee) — 32+ years IT, Seoul Institute AI Advisory, Ex-Nexon, Presidential Campaign Digital

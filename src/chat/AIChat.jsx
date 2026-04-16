@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { T, mob } from "../theme";
 import { MetalBtn } from "../components/MetalBtn";
 import { Steel } from "../components/Steel";
-import { Type } from "../components/Type";
 import { QB } from "./QuickButton";
 import { QO, FO, SC, WH, getGreet, logWH } from "../data/chat-config";
 
@@ -10,13 +9,15 @@ export function AIChat({ admin = false, currentSection = "home" }) {
   const im = `${getGreet()} BYTEFORCE AI입니다.\n무엇이든 물어보세요.`;
   const [msgs, sM] = useState([{ r: "ai", t: im }]);
   const [input, sI] = useState("");
-  const [ld, sL] = useState(false);
+  const [ld, sL] = useState(false);       // loading (waiting for first token)
+  const [streaming, sSt] = useState(false); // actively receiving tokens
   const [logs, sLg] = useState([]);
   const [showL, sSL] = useState(false);
   const [qp, sQP] = useState("initial");
   const [st, sST] = useState(null);
   const [ps, sPS] = useState("home");
   const end = useRef(null);
+  const abortRef = useRef(null);
 
   useEffect(() => {
     if (currentSection !== ps && currentSection !== "ai") {
@@ -48,10 +49,23 @@ export function AIChat({ admin = false, currentSection = "home" }) {
     } catch (e) {}
   };
 
-  const callAI = async (q, ctx = "") => {
+  /**
+   * Call Claude API with SSE streaming.
+   * Returns the full response text after the stream completes.
+   * Updates the last AI message in real-time as tokens arrive.
+   */
+  const callAI = useCallback(async (q, ctx = "") => {
     sL(true);
+    sSt(false);
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     try {
       const sp = `BYTEFORCE AI 에이전트. CEO 이한결(32년IT, 서울연구원AI자문, Ex-Nexon). 서비스: 생성형AI컨설팅(Claude/GPT/Gemini/Grok)/AI업무자동화(n8n,Zapier)/기업AI솔루션(챗봇,CRM,데이터)/웹앱MVP개발(바이브코딩)/다국어(KR,EN,JP,RU). 부산해운대오션타워608. ceo@byteforce.ai.kr / 010-9741-9217. 3문장이내 간결 전문적. 구체적 상담은 직접 연락 유도.${ctx ? "\n고객 관심 분야: " + ctx : ""}`;
+
+      // Add placeholder AI message for streaming
+      sM((prev) => [...prev, { r: "ai", t: "", streaming: true }]);
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,16 +74,90 @@ export function AIChat({ admin = false, currentSection = "home" }) {
           max_tokens: 1000,
           system: sp,
           messages: [{ role: "user", content: q }],
+          stream: true,
         }),
+        signal: controller.signal,
       });
-      const d = await res.json();
-      return d.content?.map((c) => c.text || "").join("") || "응답 오류";
-    } catch (e) {
-      return "연결 오류. ceo@byteforce.ai.kr로 문의 주세요.";
-    } finally {
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
       sL(false);
+      sSt(true);
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || ""; // Keep incomplete line in buffer
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const data = line.slice(6).trim();
+          if (data === "[DONE]") continue;
+
+          try {
+            const evt = JSON.parse(data);
+
+            // Extract text delta from Anthropic SSE events
+            if (evt.type === "content_block_delta" && evt.delta?.text) {
+              fullText += evt.delta.text;
+              const captured = fullText; // Capture for closure
+              sM((prev) => {
+                const updated = [...prev];
+                const last = updated[updated.length - 1];
+                if (last && last.r === "ai" && last.streaming) {
+                  updated[updated.length - 1] = { ...last, t: captured };
+                }
+                return updated;
+              });
+            }
+          } catch (e) {
+            // Skip malformed JSON
+          }
+        }
+      }
+
+      // Finalize: remove streaming flag
+      sM((prev) => {
+        const updated = [...prev];
+        const last = updated[updated.length - 1];
+        if (last && last.r === "ai") {
+          updated[updated.length - 1] = { r: "ai", t: fullText || "응답 오류" };
+        }
+        return updated;
+      });
+
+      sSt(false);
+      return fullText || "응답 오류";
+    } catch (e) {
+      if (e.name === "AbortError") {
+        sSt(false);
+        sL(false);
+        return "";
+      }
+      // Fallback: remove streaming placeholder and show error
+      sM((prev) => {
+        const updated = [...prev];
+        const last = updated[updated.length - 1];
+        if (last && last.streaming) {
+          updated[updated.length - 1] = { r: "ai", t: "연결 오류. ceo@byteforce.ai.kr로 문의 주세요." };
+        }
+        return updated;
+      });
+      sSt(false);
+      sL(false);
+      return "연결 오류. ceo@byteforce.ai.kr로 문의 주세요.";
     }
-  };
+  }, []);
 
   const hQS = async (o) => {
     const nm = [...msgs, { r: "user", t: o.label }];
@@ -100,14 +188,14 @@ export function AIChat({ admin = false, currentSection = "home" }) {
       `고객이 "${st}"에 관심이 있고 구체적으로 "${o.label}"을 원합니다. BYTEFORCE가 어떻게 도울 수 있는지 간결하게 안내하고, 직접 연락하도록 유도하세요.`,
       ctx,
     );
-    const fm = [...nm, { r: "ai", t: rp }];
-    sM(fm);
-    await save(fm.slice(1));
-    await logWH(ctx, rp);
+    if (rp) {
+      await save([...nm.slice(1), { r: "ai", t: rp }]);
+      await logWH(ctx, rp);
+    }
   };
 
   const send = async () => {
-    if (!input.trim() || ld) return;
+    if (!input.trim() || ld || streaming) return;
     const q = input.trim();
     sI("");
     const nm = [...msgs, { r: "user", t: q }];
@@ -115,10 +203,10 @@ export function AIChat({ admin = false, currentSection = "home" }) {
     sQP("done");
     const ctx = st ? `관심분야: ${st}` : "";
     const rp = await callAI(q, ctx);
-    const fm = [...nm, { r: "ai", t: rp }];
-    sM(fm);
-    await save(fm.slice(1));
-    await logWH(q, rp);
+    if (rp) {
+      await save([...nm.slice(1), { r: "ai", t: rp }]);
+      await logWH(q, rp);
+    }
   };
 
   // === Admin logs view ===
@@ -142,7 +230,7 @@ export function AIChat({ admin = false, currentSection = "home" }) {
               letterSpacing: 2,
             }}
           >
-            LOGS\u00b7{logs.length}
+            LOGS{"\u00b7"}{logs.length}
           </span>
           <MetalBtn size="sm" onClick={() => sSL(false)}>
             BACK
@@ -217,7 +305,7 @@ export function AIChat({ admin = false, currentSection = "home" }) {
           }}
         >
           <MetalBtn size="sm" color={T.pink} onClick={() => sSL(true)}>
-            LOGS\u00b7{logs.length}
+            LOGS{"\u00b7"}{logs.length}
           </MetalBtn>
         </div>
       )}
@@ -249,17 +337,25 @@ export function AIChat({ admin = false, currentSection = "home" }) {
               lineHeight: 1.7,
               whiteSpace: "pre-wrap",
               animation:
-                i === msgs.length - 1 ? "msgIn .3s ease" : "none",
+                i === msgs.length - 1 && !m.streaming ? "msgIn .3s ease" : "none",
             }}
           >
-            {i === msgs.length - 1 && m.r === "ai" && i > 0 ? (
-              <Type text={m.t} speed={15} />
-            ) : (
-              m.t
+            {m.t}
+            {/* Streaming cursor */}
+            {m.streaming && (
+              <span
+                style={{
+                  animation: "blink .7s step-end infinite",
+                  color: T.accent,
+                  fontWeight: 300,
+                }}
+              >
+                {"\u2502"}
+              </span>
             )}
           </div>
         ))}
-        {qp === "initial" && !ld && (
+        {qp === "initial" && !ld && !streaming && (
           <div
             style={{
               display: "flex",
@@ -279,7 +375,7 @@ export function AIChat({ admin = false, currentSection = "home" }) {
             ))}
           </div>
         )}
-        {qp === "follow" && st && FO[st] && !ld && (
+        {qp === "follow" && st && FO[st] && !ld && !streaming && (
           <div
             style={{
               display: "flex",
@@ -357,8 +453,8 @@ export function AIChat({ admin = false, currentSection = "home" }) {
           }
           onBlur={(e) => (e.target.style.borderColor = T.border)}
         />
-        <MetalBtn onClick={send} disabled={ld} style={{ minWidth: 65 }}>
-          SEND
+        <MetalBtn onClick={send} disabled={ld || streaming} style={{ minWidth: 65 }}>
+          {streaming ? "..." : "SEND"}
         </MetalBtn>
       </div>
     </div>

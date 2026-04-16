@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { T, mob } from "./theme";
 import { styles } from "./styles";
 import { useClock } from "./hooks/useClock";
@@ -9,14 +9,24 @@ import { Nav } from "./components/Nav";
 import { MetalBtn } from "./components/MetalBtn";
 import { MobNav } from "./components/MobNav";
 import { LaserBorder } from "./components/LaserBorder";
-import { AIChat } from "./chat/AIChat";
 import { ScrollProgress } from "./components/ScrollProgress";
+
+// Lazy-load AI chat — not needed at initial render
+const AIChat = lazy(() => import("./chat/AIChat").then((m) => ({ default: m.AIChat })));
 import { HomeView } from "./views/HomeView";
 import { ServicesView } from "./views/ServicesView";
 import { WorkView } from "./views/WorkView";
 import { ProcessView } from "./views/ProcessView";
 import { ContactView } from "./views/ContactView";
 import { SolutionsView } from "./views/SolutionsView";
+
+const AIFallback = () => (
+  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", gap: 6 }}>
+    {[0, 1, 2].map((i) => (
+      <div key={i} style={{ width: 5, height: 5, borderRadius: "50%", background: T.metalGrad, animation: `dotPulse 1.2s ease ${i * 0.15}s infinite` }} />
+    ))}
+  </div>
+);
 
 const FONT_LINK =
   "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap";
@@ -126,7 +136,7 @@ export default function App() {
     work: <ScrollProgress color={T.gold}><WorkView /></ScrollProgress>,
     process: <ScrollProgress color={T.green}><ProcessView /></ScrollProgress>,
     contact: <ScrollProgress color={T.cyan}><ContactView /></ScrollProgress>,
-    ai: <AIChat admin={adm} currentSection={sec} />,
+    ai: <Suspense fallback={<AIFallback />}><AIChat admin={adm} currentSection={sec} /></Suspense>,
   };
 
   const NAV_ITEMS = [
@@ -399,7 +409,7 @@ export default function App() {
                     animation: panelAnim,
                   }}
                 >
-                  {ai ? <AIChat admin={adm} currentSection={sec} /> : views[sec]}
+                  {ai ? <Suspense fallback={<AIFallback />}><AIChat admin={adm} currentSection={sec} /></Suspense> : views[sec]}
                 </div>
               </div>
               {!ai && (
@@ -428,7 +438,7 @@ export default function App() {
                     </span>
                     <MetalBtn size="sm" onClick={() => sA(true)}>EXPAND</MetalBtn>
                   </div>
-                  <AIChat admin={adm} currentSection={sec} />
+                  <Suspense fallback={<AIFallback />}><AIChat admin={adm} currentSection={sec} /></Suspense>
                 </div>
               )}
             </div>
