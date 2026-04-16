@@ -126,8 +126,8 @@ export default function App() {
   const panelAnim = ai
     ? "panelIn .35s ease"
     : dir === "up"
-      ? "panelUp .35s ease"
-      : "panelDown .35s ease";
+      ? "panelUp .35s cubic-bezier(0.25,0.46,0.45,0.94)"
+      : "panelDown .35s cubic-bezier(0.25,0.46,0.45,0.94)";
 
   const views = {
     home: <ScrollProgress color={T.accent}><HomeView navTo={navTo} /></ScrollProgress>,
@@ -179,7 +179,7 @@ export default function App() {
             style={{
               padding: "10px 16px",
               background: "rgba(18,20,26,.92)",
-              backdropFilter: "blur(24px)",
+              backdropFilter: "blur(24px) saturate(1.4)",
               borderBottom: `1px solid ${T.border}`,
               display: "flex",
               justifyContent: "space-between",
@@ -251,8 +251,8 @@ export default function App() {
               flexDirection: "column",
               flexShrink: 0,
               background: "rgba(18,20,26,.45)",
-              backdropFilter: "blur(40px)",
-              WebkitBackdropFilter: "blur(40px)",
+              backdropFilter: "blur(40px) saturate(1.4)",
+              WebkitBackdropFilter: "blur(40px) saturate(1.4)",
               transition: "width .25s ease",
               overflow: "hidden",
             }}
@@ -379,7 +379,7 @@ export default function App() {
                 padding: "0 28px",
                 flexShrink: 0,
                 background: "rgba(18,20,26,.5)",
-                backdropFilter: "blur(12px)",
+                backdropFilter: "blur(12px) saturate(1.3)",
               }}
             >
               <div style={{ fontFamily: T.mono, fontSize: 10, color: T.sub, letterSpacing: 3, fontWeight: 500 }}>
@@ -421,7 +421,7 @@ export default function App() {
                     flexDirection: "column",
                     flexShrink: 0,
                     background: "rgba(18,20,26,.3)",
-                    backdropFilter: "blur(20px)",
+                    backdropFilter: "blur(20px) saturate(1.4)",
                   }}
                 >
                   <div

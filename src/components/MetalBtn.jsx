@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { T } from "../theme";
 
+const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+
 export function MetalBtn({
   children,
   onClick,
@@ -42,14 +44,18 @@ export function MetalBtn({
         boxShadow: p
           ? `0 1px 2px rgba(0,0,0,.3),inset 0 2px 4px rgba(0,0,0,.15)`
           : h
-            ? `0 4px 16px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.2)`
+            ? color
+              ? `0 4px 16px ${color}25,0 0 12px ${color}15,inset 0 1px 0 rgba(255,255,255,.2)`
+              : `0 4px 16px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.2)`
             : `0 2px 8px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.15)`,
         transform: p
-          ? "scale(.98) translateY(1px)"
+          ? "scale(.95) translateY(1px)"
           : h
-            ? "translateY(-1px)"
+            ? "scale(1.03) translateY(-1px)"
             : "none",
-        transition: "all .15s",
+        transition: p
+          ? "all .1s ease"
+          : `all .25s ${SPRING}`,
         width: full ? "100%" : "auto",
         ...style,
       }}

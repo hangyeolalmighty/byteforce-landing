@@ -1,6 +1,10 @@
 import React, { useState, useRef } from "react";
 import { T, mob } from "../theme";
 
+// Spring easing curves (from naisser.ai.kr)
+const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+const SPRING_GENTLE = "cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+
 export function Steel({
   children,
   accent = null,
@@ -38,10 +42,16 @@ export function Steel({
           : T.surface,
         border: `1px solid ${active && accent ? accent + "20" : h ? T.borderHi : T.border}`,
         boxShadow: h
-          ? `0 8px 32px rgba(0,0,0,.25),0 0 20px ${accent || "rgba(74,158,255,0)"}15,inset 0 1px 0 rgba(255,255,255,.05)`
-          : `0 1px 4px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.02)`,
-        transition: "all .35s",
+          ? `0 8px 32px rgba(0,0,0,.25),0 0 20px ${accent || "rgba(74,158,255,0)"}15,inset 0 1px 0 rgba(255,255,255,.07)`
+          : active && accent
+            ? `0 0 15px ${accent}15,inset 0 0 15px ${accent}05,inset 0 1px 0 rgba(255,255,255,.05)`
+            : `0 1px 4px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.04)`,
+        transition: `all .3s ${SPRING_GENTLE}`,
+        transform: h && onClick ? "scale(1.01)" : "scale(1)",
         cursor: onClick ? "pointer" : "default",
+        // Gentle pulse animation for active cards
+        animation: active && accent ? "gentlePulse 3s ease infinite" : "none",
+        "--pulse-color": accent ? `${accent}20` : "rgba(74,158,255,.15)",
         ...style,
       }}
     >
@@ -55,17 +65,30 @@ export function Steel({
           opacity: 0.6,
         }}
       />
-      {/* Mouse-tracking highlight */}
+      {/* Noise grain overlay — adds analog depth */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background: `radial-gradient(ellipse at ${mx}% ${my}%,rgba(255,255,255,${h ? 0.04 : 0}),transparent 50%)`,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E")`,
+          pointerEvents: "none",
+          opacity: h ? 0.8 : 0.4,
+          transition: "opacity .3s",
+        }}
+      />
+      {/* Mouse-tracking highlight — enhanced with glow bloom */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: h
+            ? `radial-gradient(ellipse at ${mx}% ${my}%,rgba(255,255,255,.05),transparent 50%)`
+            : "transparent",
           pointerEvents: "none",
           transition: h ? "none" : "opacity .4s",
         }}
       />
-      {/* Top edge highlight */}
+      {/* Top edge highlight — brushed metal reflection */}
       <div
         style={{
           position: "absolute",
@@ -75,12 +98,25 @@ export function Steel({
           height: h ? 2 : 1,
           background:
             h && accent
-              ? `linear-gradient(90deg,transparent,${accent}40,transparent)`
-              : `linear-gradient(90deg,transparent,rgba(196,202,214,${h ? 0.15 : 0.04}),transparent)`,
+              ? `linear-gradient(90deg,transparent,${accent}50,transparent)`
+              : `linear-gradient(90deg,transparent,rgba(196,202,214,${h ? 0.18 : 0.05}),transparent)`,
           pointerEvents: "none",
-          transition: "all .4s",
+          transition: `all .3s ${SPRING_GENTLE}`,
         }}
       />
+      {/* Metal sheen sweep on hover */}
+      {h && !mob && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(110deg,transparent 30%,rgba(255,255,255,.03) 45%,rgba(255,255,255,.06) 50%,rgba(255,255,255,.03) 55%,transparent 70%)",
+            backgroundSize: "200% 100%",
+            animation: "metalSheen 1.5s ease forwards",
+            pointerEvents: "none",
+          }}
+        />
+      )}
       {/* Active center glow */}
       {active && accent && (
         <div
@@ -91,7 +127,7 @@ export function Steel({
             width: 160,
             height: 160,
             borderRadius: "50%",
-            background: `radial-gradient(circle,${accent}06,transparent 70%)`,
+            background: `radial-gradient(circle,${accent}08,transparent 70%)`,
             transform: "translate(-50%,-50%)",
             filter: "blur(25px)",
             pointerEvents: "none",
@@ -108,7 +144,7 @@ export function Steel({
             width: 80,
             height: 80,
             borderRadius: "50%",
-            background: `radial-gradient(circle,${accent}15,transparent 70%)`,
+            background: `radial-gradient(circle,${accent}18,transparent 70%)`,
             filter: "blur(15px)",
             pointerEvents: "none",
           }}

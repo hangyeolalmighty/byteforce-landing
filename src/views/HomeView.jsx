@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { T, mob } from "../theme";
 import { ChromeMesh } from "../components/ChromeMesh";
 import { MetalBtn } from "../components/MetalBtn";
@@ -9,9 +9,23 @@ import { SOLUTIONS } from "../data/solutions";
 
 export function HomeView({ navTo }) {
   const [typed, sT] = useState(false);
+  const [nameHov, sNH] = useState(false);
+  const [spotX, sSX] = useState(50);
+  const [spotY, sSY] = useState(50);
+  const containerRef = useRef(null);
+
+  // Spotlight cursor — radial gradient follows mouse
+  const onMouseMove = useCallback((e) => {
+    if (mob || !containerRef.current) return;
+    const r = containerRef.current.getBoundingClientRect();
+    sSX(e.clientX - r.left);
+    sSY(e.clientY - r.top);
+  }, []);
 
   return (
     <div
+      ref={containerRef}
+      onMouseMove={onMouseMove}
       style={{
         padding: mob ? 20 : 44,
         minHeight: "100%",
@@ -23,6 +37,30 @@ export function HomeView({ navTo }) {
         margin: "0 auto",
       }}
     >
+      {/* Spotlight cursor effect — Vercel/Linear style */}
+      {!mob && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: `radial-gradient(600px at ${spotX}px ${spotY}px, rgba(74,158,255,.04), transparent 70%)`,
+            pointerEvents: "none",
+            zIndex: 1,
+            transition: "background .05s linear",
+          }}
+        />
+      )}
+      {/* Noise grain texture — analog depth */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E")`,
+          pointerEvents: "none",
+          zIndex: 1,
+          opacity: 0.6,
+        }}
+      />
       {/* Ambient glow orbs */}
       <div
         style={{
@@ -124,21 +162,34 @@ export function HomeView({ navTo }) {
           </div>
         </div>
 
-        {/* Name with glow */}
+        {/* Name with shimmer + chromatic aberration hover */}
         <div
+          onMouseEnter={() => !mob && sNH(true)}
+          onMouseLeave={() => sNH(false)}
           style={{
             fontSize: mob ? "clamp(36px,9vw,52px)" : "clamp(44px,5vw,68px)",
             fontWeight: 900,
             letterSpacing: 3,
             lineHeight: 1,
-            background: T.metalText,
+            background: nameHov
+              ? "linear-gradient(90deg,#555B68,#8A919E,#E8ECF2,#fff,#E8ECF2,#8A919E,#555B68)"
+              : T.metalText,
+            backgroundSize: nameHov ? "200% 100%" : "100% 100%",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             filter:
               "drop-shadow(0 2px 4px rgba(0,0,0,.2)) drop-shadow(0 0 20px rgba(196,202,214,.18)) drop-shadow(0 0 40px rgba(74,158,255,.08))",
-            animation: "stagger .6s ease forwards, nameGlow 3s ease infinite 1s",
-            opacity: 0,
-            animationDelay: ".15s",
+            animation: nameHov
+              ? "textShimmer 2s ease-in-out infinite, nameGlow 3s ease infinite"
+              : "stagger .6s ease forwards, nameGlow 3s ease infinite 1s",
+            opacity: nameHov ? 1 : 0,
+            animationDelay: nameHov ? "0s" : ".15s",
+            position: "relative",
+            cursor: "default",
+            transition: "text-shadow .3s ease",
+            textShadow: nameHov
+              ? "-2px 0 rgba(74,158,255,.3), 2px 0 rgba(219,39,119,.3), 0 0 20px rgba(196,202,214,.15)"
+              : "none",
           }}
         >
           이한결

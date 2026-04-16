@@ -1,6 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { T, mob } from "../theme";
 import { BL } from "../data/boot-lines";
+
+const GLITCH_CHARS = "!@#$%^&*()_+-=[]{}|;:<>?/~`01";
+
+function ScrambleText({ text, delay = 0, color }) {
+  const [display, setDisplay] = useState("");
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    let timeout;
+    timeout = setTimeout(() => {
+      let iteration = 0;
+      const len = text.length;
+      const interval = setInterval(() => {
+        setDisplay(
+          text
+            .split("")
+            .map((char, i) => {
+              if (char === " ") return " ";
+              if (i < iteration) return char;
+              return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+            })
+            .join("")
+        );
+        iteration += 1;
+        if (iteration > len) {
+          clearInterval(interval);
+          setDisplay(text);
+          setDone(true);
+        }
+      }, 20);
+      return () => clearInterval(interval);
+    }, delay);
+    return () => clearTimeout(timeout);
+  }, [text, delay]);
+
+  return (
+    <div
+      style={{
+        fontSize: mob ? 10 : 11,
+        color,
+        marginBottom: 6,
+        opacity: display ? 1 : 0,
+        letterSpacing: 0.5,
+        lineHeight: 1.8,
+        fontVariantLigatures: "none",
+        animation: done ? "none" : "scrambleIn .3s ease",
+      }}
+    >
+      {display}
+    </div>
+  );
+}
 
 export function BootScreen({ onDone }) {
   const [lines, setLines] = useState([]);
@@ -29,7 +81,27 @@ export function BootScreen({ onDone }) {
         pointerEvents: fade ? "none" : "auto",
       }}
     >
-      <div style={{ width: mob ? "90%" : 460, fontFamily: T.mono }}>
+      {/* Scanline overlay */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0px,rgba(0,0,0,.12) 1px,transparent 1px,transparent 2px)",
+          pointerEvents: "none",
+          opacity: 0.3,
+        }}
+      />
+      {/* Noise grain */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`,
+          pointerEvents: "none",
+          opacity: 0.5,
+        }}
+      />
+      <div style={{ width: mob ? "90%" : 460, fontFamily: T.mono, position: "relative", zIndex: 2 }}>
         <div
           style={{
             fontSize: 10,
@@ -42,21 +114,7 @@ export function BootScreen({ onDone }) {
           SYSTEM BOOT
         </div>
         {lines.map((l, i) => (
-          <div
-            key={i}
-            style={{
-              fontSize: mob ? 10 : 11,
-              color: l.c,
-              marginBottom: 6,
-              opacity: 0,
-              animation: "bootLine 0.3s ease forwards",
-              animationDelay: `${i * 0.05}s`,
-              letterSpacing: 0.5,
-              lineHeight: 1.8,
-            }}
-          >
-            {l.t}
-          </div>
+          <ScrambleText key={i} text={l.t} delay={0} color={l.c} />
         ))}
         <div
           style={{
@@ -70,9 +128,10 @@ export function BootScreen({ onDone }) {
           <div
             style={{
               height: "100%",
-              background: T.metalGrad,
+              background: `linear-gradient(90deg, ${T.accent}, ${T.purple}, ${T.pink}, ${T.gold})`,
+              backgroundSize: "300% 100%",
               borderRadius: 1,
-              animation: "bootBar 2.2s ease forwards",
+              animation: "bootBar 2.2s ease forwards, meshFloat 2s ease infinite",
             }}
           />
         </div>
