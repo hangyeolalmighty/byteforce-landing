@@ -1,16 +1,26 @@
 import React from "react";
 import { T, mob } from "../theme";
 
-export function Nav({ icon, label, active, color, onClick, badge = null }) {
+export function Nav({
+  icon,
+  label,
+  active,
+  color,
+  onClick,
+  badge = null,
+  visited = false,
+  collapsed = false,
+}) {
   return (
     <button
       onClick={onClick}
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 10,
+        gap: collapsed ? 0 : 10,
         width: "100%",
-        padding: "10px 18px",
+        padding: collapsed ? "10px 0" : "10px 18px",
+        justifyContent: collapsed ? "center" : "flex-start",
         background: active
           ? `linear-gradient(90deg,${color}08,transparent)`
           : "transparent",
@@ -33,11 +43,27 @@ export function Nav({ icon, label, active, color, onClick, badge = null }) {
           color: active ? color : T.mute,
           transition: "all .3s",
           filter: active ? `drop-shadow(0 0 3px ${color}50)` : "none",
+          position: "relative",
         }}
       >
         {icon}
+        {/* Visited indicator dot */}
+        {visited && !active && (
+          <span
+            style={{
+              position: "absolute",
+              top: -2,
+              right: -2,
+              width: 3,
+              height: 3,
+              borderRadius: "50%",
+              background: color,
+              opacity: 0.5,
+            }}
+          />
+        )}
       </span>
-      {!mob && (
+      {!mob && !collapsed && (
         <span
           style={{
             fontFamily: T.mono,
@@ -46,12 +72,13 @@ export function Nav({ icon, label, active, color, onClick, badge = null }) {
             fontWeight: active ? 600 : 400,
             color: active ? T.text : T.sub,
             transition: "color .2s",
+            whiteSpace: "nowrap",
           }}
         >
           {label}
         </span>
       )}
-      {badge && (
+      {badge && !collapsed && (
         <span
           style={{
             position: "absolute",

@@ -20,8 +20,7 @@ export function ContactView() {
     <div
       style={{
         padding: mob ? 16 : 32,
-        height: "100%",
-        overflow: "auto",
+        minHeight: "100%",
         maxWidth: 720,
         margin: "0 auto",
       }}

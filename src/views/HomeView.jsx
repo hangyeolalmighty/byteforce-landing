@@ -5,15 +5,16 @@ import { MetalBtn } from "../components/MetalBtn";
 import { Steel } from "../components/Steel";
 import { Type } from "../components/Type";
 import { ServiceCycler } from "../components/ServiceCycler";
+import { SOLUTIONS } from "../data/solutions";
 
-export function HomeView() {
+export function HomeView({ navTo }) {
   const [typed, sT] = useState(false);
 
   return (
     <div
       style={{
         padding: mob ? 20 : 44,
-        height: "100%",
+        minHeight: "100%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -31,8 +32,7 @@ export function HomeView() {
           width: mob ? 200 : 400,
           height: mob ? 200 : 400,
           borderRadius: "50%",
-          background:
-            "radial-gradient(circle,rgba(74,158,255,.06),transparent 70%)",
+          background: "radial-gradient(circle,rgba(74,158,255,.06),transparent 70%)",
           filter: "blur(60px)",
           pointerEvents: "none",
           animation: "ambientFloat 8s ease infinite",
@@ -46,8 +46,7 @@ export function HomeView() {
           width: mob ? 150 : 300,
           height: mob ? 150 : 300,
           borderRadius: "50%",
-          background:
-            "radial-gradient(circle,rgba(124,92,252,.05),transparent 70%)",
+          background: "radial-gradient(circle,rgba(124,92,252,.05),transparent 70%)",
           filter: "blur(50px)",
           pointerEvents: "none",
           animation: "ambientFloat 10s ease infinite reverse",
@@ -57,28 +56,78 @@ export function HomeView() {
       <ChromeMesh />
 
       <div style={{ position: "relative", zIndex: 2 }}>
-        {/* Tagline */}
+        {/* BF Logo Badge */}
         <div
           style={{
-            fontFamily: T.mono,
-            fontSize: 8,
-            color: T.mute,
-            letterSpacing: 7,
-            marginBottom: 28,
+            display: "flex",
+            alignItems: "center",
+            gap: 14,
+            marginBottom: 20,
             animation: "stagger .5s ease forwards",
             opacity: 0,
-            animationDelay: ".1s",
+            animationDelay: ".05s",
           }}
         >
-          AI CONSULTING & TECHNOLOGY
+          <div
+            style={{
+              position: "relative",
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+              background: T.metalGradSubtle,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              border: `1px solid ${T.border}`,
+              boxShadow: "0 2px 8px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.08)",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: T.mono,
+                fontSize: 13,
+                fontWeight: 900,
+                background: T.metalText,
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                letterSpacing: 1,
+              }}
+            >
+              BF
+            </span>
+            {/* Mini laser border on badge */}
+            <div
+              style={{
+                position: "absolute",
+                inset: -1,
+                borderRadius: 11,
+                padding: 1,
+                background:
+                  "conic-gradient(from var(--laser-angle,0deg),#4A9EFF,#7C5CFC,#DB2777,#C9A84C,#34D399,#22D3EE,#4A9EFF)",
+                WebkitMask: "linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)",
+                WebkitMaskComposite: "xor",
+                maskComposite: "exclude",
+                animation: "laserSpin 3s linear infinite, nameGlow 3s ease infinite",
+                opacity: 0.4,
+              }}
+            />
+          </div>
+          <div
+            style={{
+              fontFamily: T.mono,
+              fontSize: 8,
+              color: T.mute,
+              letterSpacing: 7,
+            }}
+          >
+            AI CONSULTING & TECHNOLOGY
+          </div>
         </div>
 
         {/* Name with glow */}
         <div
           style={{
-            fontSize: mob
-              ? "clamp(36px,9vw,52px)"
-              : "clamp(44px,5vw,68px)",
+            fontSize: mob ? "clamp(36px,9vw,52px)" : "clamp(44px,5vw,68px)",
             fontWeight: 900,
             letterSpacing: 3,
             lineHeight: 1,
@@ -87,10 +136,9 @@ export function HomeView() {
             WebkitTextFillColor: "transparent",
             filter:
               "drop-shadow(0 2px 4px rgba(0,0,0,.2)) drop-shadow(0 0 20px rgba(196,202,214,.18)) drop-shadow(0 0 40px rgba(74,158,255,.08))",
-            animation:
-              "stagger .6s ease forwards, nameGlow 3s ease infinite 1s",
+            animation: "stagger .6s ease forwards, nameGlow 3s ease infinite 1s",
             opacity: 0,
-            animationDelay: ".2s",
+            animationDelay: ".15s",
           }}
         >
           이한결
@@ -104,10 +152,10 @@ export function HomeView() {
             color: T.chrome,
             letterSpacing: 4,
             marginTop: 8,
-            marginBottom: 40,
+            marginBottom: 36,
             animation: "stagger .6s ease forwards",
             opacity: 0,
-            animationDelay: ".3s",
+            animationDelay: ".25s",
           }}
         >
           AI Specialist · CEO, BYTEFORCE
@@ -122,7 +170,7 @@ export function HomeView() {
             maxWidth: 480,
             animation: "stagger .6s ease forwards",
             opacity: 0,
-            animationDelay: ".4s",
+            animationDelay: ".35s",
           }}
         >
           {!typed ? (
@@ -132,9 +180,7 @@ export function HomeView() {
               onDone={() => sT(true)}
             />
           ) : (
-            <span>
-              기술과 전략 사이에서, AI가 실제로 작동하는 지점을 설계합니다.
-            </span>
+            <span>기술과 전략 사이에서, AI가 실제로 작동하는 지점을 설계합니다.</span>
           )}
         </div>
 
@@ -153,15 +199,8 @@ export function HomeView() {
           </div>
         )}
 
-        {/* Stats cards */}
-        <div
-          style={{
-            display: "flex",
-            gap: 8,
-            flexWrap: "wrap",
-            marginTop: typed ? 28 : 44,
-          }}
-        >
+        {/* Stats cards — slide from left */}
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: typed ? 28 : 44 }}>
           {[
             { v: "32+", l: "YEARS" },
             { v: "서울연구원", l: "AI ADVISORY" },
@@ -173,7 +212,7 @@ export function HomeView() {
               style={{
                 padding: "12px 16px",
                 minWidth: mob ? 68 : 90,
-                animation: "stagger .5s ease forwards",
+                animation: "slideInLeft .5s ease forwards",
                 opacity: 0,
                 animationDelay: `${0.5 + i * 0.08}s`,
               }}
@@ -216,16 +255,8 @@ export function HomeView() {
           }}
         >
           {[
-            {
-              label: "CONTACT",
-              href: "mailto:ceo@byteforce.ai.kr",
-              color: null,
-            },
-            {
-              label: "CALL",
-              href: "tel:010-9741-9217",
-              color: T.accent,
-            },
+            { label: "CONTACT", href: "mailto:ceo@byteforce.ai.kr", color: null },
+            { label: "CALL", href: "tel:010-9741-9217", color: T.accent },
           ].map((btn, i) => (
             <div
               key={i}
@@ -240,8 +271,7 @@ export function HomeView() {
                   padding: 2,
                   background:
                     "conic-gradient(from var(--laser-angle,0deg),#4A9EFF,#7C5CFC,#DB2777,#C9A84C,#34D399,#22D3EE,#4A9EFF)",
-                  WebkitMask:
-                    "linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)",
+                  WebkitMask: "linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)",
                   WebkitMaskComposite: "xor",
                   maskComposite: "exclude",
                   animation: "laserSpin 3s linear infinite",
@@ -256,8 +286,7 @@ export function HomeView() {
                   padding: 4,
                   background:
                     "conic-gradient(from var(--laser-angle,0deg),#4A9EFF40,#7C5CFC40,#DB277740,#C9A84C40,#34D39940,#22D3EE40,#4A9EFF40)",
-                  WebkitMask:
-                    "linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)",
+                  WebkitMask: "linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0)",
                   WebkitMaskComposite: "xor",
                   maskComposite: "exclude",
                   animation: "laserSpin 3s linear infinite",
@@ -276,6 +305,110 @@ export function HomeView() {
             </div>
           ))}
         </div>
+
+        {/* Solutions mini-banner */}
+        {typed && SOLUTIONS.length > 0 && (
+          <div
+            style={{
+              marginTop: 28,
+              animation: "stagger .5s ease forwards",
+              opacity: 0,
+              animationDelay: "1.1s",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: T.mono,
+                fontSize: 7,
+                color: T.mute,
+                letterSpacing: 3,
+                marginBottom: 8,
+              }}
+            >
+              OUR SOLUTIONS
+            </div>
+            <div style={{ display: "flex", gap: 8, overflowX: "auto" }}>
+              {SOLUTIONS.map((s, i) => {
+                const coming = s.status === "COMING SOON";
+                return (
+                  <div
+                    key={i}
+                    onClick={() => {
+                      if (navTo) navTo("solutions");
+                      else if (!coming) window.open(s.url, "_blank");
+                    }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: "8px 14px",
+                      borderRadius: 8,
+                      background: T.surface,
+                      border: `1px solid ${T.border}`,
+                      cursor: "pointer",
+                      minWidth: mob ? 160 : "auto",
+                      flexShrink: 0,
+                      transition: "all .2s",
+                      opacity: coming ? 0.5 : 1,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = s.color + "30";
+                      e.currentTarget.style.boxShadow = `0 2px 12px ${s.color}10`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = T.border;
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
+                  >
+                    {!coming && (
+                      <div
+                        style={{
+                          width: 5,
+                          height: 5,
+                          borderRadius: "50%",
+                          background: T.green,
+                          boxShadow: `0 0 4px ${T.green}`,
+                          flexShrink: 0,
+                        }}
+                      />
+                    )}
+                    <span
+                      style={{
+                        fontFamily: T.mono,
+                        fontSize: 10,
+                        fontWeight: 600,
+                        color: T.text,
+                        letterSpacing: 0.5,
+                      }}
+                    >
+                      {s.name}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: 9,
+                        color: T.sub,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {s.tagline}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: T.mono,
+                        fontSize: 9,
+                        color: s.color,
+                        opacity: 0.6,
+                        marginLeft: "auto",
+                      }}
+                    >
+                      {"\u2197"}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

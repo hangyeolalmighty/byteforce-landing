@@ -7,6 +7,7 @@ import { CATS, catColors } from "../data/services";
 export function WorkView() {
   const [cat, sCat] = useState("All");
   const [key, sKey] = useState(0);
+  const [hov, sHov] = useState(null); // hovered project name
   const filtered = cat === "All" ? PJ : PJ.filter((p) => p.cat === cat);
 
   const changeCat = (c) => {
@@ -18,8 +19,7 @@ export function WorkView() {
     <div
       style={{
         padding: mob ? 16 : 32,
-        height: "100%",
-        overflow: "auto",
+        minHeight: "100%",
         maxWidth: 1060,
         margin: "0 auto",
       }}
@@ -160,6 +160,7 @@ export function WorkView() {
       >
         {filtered.map((p, i) => {
           const big = !mob && p.feat;
+          const isHov = hov === p.name && !mob;
           return (
             <div
               key={p.name}
@@ -169,6 +170,8 @@ export function WorkView() {
                 opacity: 0,
                 animationDelay: `${i * 0.04}s`,
               }}
+              onMouseEnter={() => !mob && sHov(p.name)}
+              onMouseLeave={() => sHov(null)}
             >
               <Steel
                 accent={p.color}
@@ -180,6 +183,7 @@ export function WorkView() {
                   boxShadow: p.feat
                     ? `0 4px 24px ${p.color}12,0 0 0 1px ${p.color}10`
                     : `0 1px 4px rgba(0,0,0,.1),inset 0 1px 0 rgba(255,255,255,.02)`,
+                  transition: "all .3s ease",
                 }}
               >
                 {/* Featured top accent line */}
@@ -206,13 +210,7 @@ export function WorkView() {
                     marginBottom: big ? 10 : 8,
                   }}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                  >
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     {p.feat && (
                       <div
                         style={{
@@ -247,14 +245,7 @@ export function WorkView() {
                       />
                     )}
                   </div>
-                  <span
-                    style={{
-                      fontFamily: T.mono,
-                      fontSize: 9,
-                      color: p.color,
-                      opacity: 0.6,
-                    }}
-                  >
+                  <span style={{ fontFamily: T.mono, fontSize: 9, color: p.color, opacity: 0.6 }}>
                     {"\u2197"}
                   </span>
                 </div>
@@ -271,25 +262,47 @@ export function WorkView() {
                   {p.desc}
                 </div>
 
-                {/* Tags */}
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 4,
-                    flexWrap: "wrap",
-                    alignItems: "center",
-                  }}
-                >
+                {/* Hover-expanded content */}
+                {isHov && (
+                  <div
+                    style={{
+                      marginBottom: 10,
+                      paddingTop: 8,
+                      borderTop: `1px solid ${p.color}15`,
+                      animation: "stagger .2s ease",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontFamily: T.mono,
+                        fontSize: 9,
+                        color: p.color,
+                        opacity: 0.8,
+                        letterSpacing: 0.5,
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                      }}
+                    >
+                      <span style={{ fontSize: 7, opacity: 0.6 }}>{"\u25cf"}</span>
+                      {p.url.replace("https://", "")}
+                    </div>
+                  </div>
+                )}
+
+                {/* Tags — larger on hover */}
+                <div style={{ display: "flex", gap: 4, flexWrap: "wrap", alignItems: "center" }}>
                   <span
                     style={{
                       fontFamily: T.mono,
-                      fontSize: 7,
-                      padding: "2px 6px",
+                      fontSize: isHov ? 8 : 7,
+                      padding: isHov ? "3px 8px" : "2px 6px",
                       borderRadius: 3,
                       background: `${catColors[p.cat]}10`,
                       color: catColors[p.cat],
                       letterSpacing: 1,
                       opacity: 0.7,
+                      transition: "all .2s",
                     }}
                   >
                     {p.cat}
@@ -299,13 +312,14 @@ export function WorkView() {
                       key={j}
                       style={{
                         fontFamily: T.mono,
-                        fontSize: 8,
-                        padding: "2px 7px",
+                        fontSize: isHov ? 9 : 8,
+                        padding: isHov ? "3px 9px" : "2px 7px",
                         borderRadius: 4,
                         background: `${p.color}08`,
-                        border: `1px solid ${p.color}15`,
-                        color: `${p.color}90`,
+                        border: `1px solid ${p.color}${isHov ? "25" : "15"}`,
+                        color: `${p.color}${isHov ? "" : "90"}`,
                         letterSpacing: 0.5,
+                        transition: "all .2s",
                       }}
                     >
                       {t}

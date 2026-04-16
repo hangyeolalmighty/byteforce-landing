@@ -8,8 +8,7 @@ export function SolutionsView() {
     <div
       style={{
         padding: mob ? 16 : 32,
-        height: "100%",
-        overflow: "auto",
+        minHeight: "100%",
         maxWidth: 1060,
         margin: "0 auto",
       }}
