@@ -245,6 +245,7 @@ export default function App() {
           {/* === Sidebar === */}
           <div
             style={{
+              position: "relative",
               width: sideW,
               borderRight: `1px solid ${T.border}`,
               display: "flex",
@@ -257,6 +258,7 @@ export default function App() {
               overflow: "hidden",
             }}
           >
+            <div style={{position:"absolute",inset:0,backgroundImage:`url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E")`,pointerEvents:"none",opacity:0.4}} />
             {/* Logo */}
             <div style={{ padding: collapsed ? "22px 8px 18px" : "22px 18px 18px", borderBottom: `1px solid ${T.border}`, transition: "padding .25s" }}>
               <div
@@ -310,7 +312,7 @@ export default function App() {
                   onMouseEnter={(e) => (e.target.style.color = T.sub)}
                   onMouseLeave={(e) => (e.target.style.color = T.mute)}
                 >
-                  v6.1{adm ? " \u00b7 ADMIN" : ""}
+                  v7.0{adm ? " \u00b7 ADMIN" : ""}
                 </div>
               )}
             </div>
@@ -328,7 +330,7 @@ export default function App() {
                   collapsed={collapsed}
                 />
               ))}
-              <div style={{ height: 1, background: T.border, margin: "10px 18px" }} />
+              <div style={{ height: 1, background: `linear-gradient(90deg, transparent, ${T.border}, rgba(74,158,255,.15), ${T.border}, transparent)`, margin: "10px 18px" }} />
               <Nav
                 icon={"\u25cf"}
                 label="AI AGENT"

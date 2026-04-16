@@ -1,5 +1,5 @@
-import React from "react";
-import { T, mob } from "../theme";
+import React, { useState } from "react";
+import { T, mob, SPRING_GENTLE } from "../theme";
 
 export function Nav({
   icon,
@@ -11,9 +11,13 @@ export function Nav({
   visited = false,
   collapsed = false,
 }) {
+  const [h, sH] = useState(false);
+
   return (
     <button
       onClick={onClick}
+      onMouseEnter={() => sH(true)}
+      onMouseLeave={() => sH(false)}
       style={{
         display: "flex",
         alignItems: "center",
@@ -23,16 +27,20 @@ export function Nav({
         justifyContent: collapsed ? "center" : "flex-start",
         background: active
           ? `linear-gradient(90deg,${color}08,transparent)`
+          : h
+          ? "rgba(255,255,255,.02)"
           : "transparent",
         border: "none",
-        borderLeft: active
-          ? `2px solid ${color}`
-          : "2px solid transparent",
+        borderLeft: "2px solid transparent",
+        borderImage: active
+          ? `linear-gradient(180deg, transparent, ${color}, transparent) 1`
+          : "none",
         cursor: "pointer",
-        transition: "all .2s",
+        transition: "all .25s " + SPRING_GENTLE,
         textAlign: "left",
         borderRadius: 0,
         position: "relative",
+        boxShadow: active ? `-4px 0 12px ${color}20` : "none",
       }}
     >
       <span
@@ -41,8 +49,13 @@ export function Nav({
           width: 18,
           textAlign: "center",
           color: active ? color : T.mute,
-          transition: "all .3s",
-          filter: active ? `drop-shadow(0 0 3px ${color}50)` : "none",
+          transition: "all .25s " + SPRING_GENTLE,
+          filter: h
+            ? `drop-shadow(0 0 4px ${color}40)`
+            : active
+            ? `drop-shadow(0 0 3px ${color}50)`
+            : "none",
+          transform: h ? "scale(1.15)" : "scale(1)",
           position: "relative",
         }}
       >
@@ -70,8 +83,8 @@ export function Nav({
             fontSize: 10,
             letterSpacing: 2,
             fontWeight: active ? 600 : 400,
-            color: active ? T.text : T.sub,
-            transition: "color .2s",
+            color: active ? color : h ? T.text : T.sub,
+            transition: "color .25s " + SPRING_GENTLE,
             whiteSpace: "nowrap",
           }}
         >

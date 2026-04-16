@@ -26,6 +26,7 @@ export function Type({ text, speed = 20, onDone = null }) {
           animation: "blink .7s step-end infinite",
           color: T.accent,
           fontWeight: 300,
+          textShadow: "0 0 8px rgba(74,158,255,.6), 0 0 16px rgba(74,158,255,.3)",
         }}
       >
         {"\u2502"}

@@ -32,7 +32,23 @@ export function ScrollProgress({ color = T.accent, children }) {
           transition: "width .08s linear",
           borderRadius: "0 1px 1px 0",
         }}
-      />
+      >
+        {/* Spark dot at leading edge */}
+        {pct > 0 && (
+          <div
+            style={{
+              position: "absolute",
+              right: -1,
+              top: -1,
+              width: 4,
+              height: 4,
+              borderRadius: "50%",
+              background: "white",
+              boxShadow: `0 0 6px ${color}, 0 0 12px ${color}60`,
+            }}
+          />
+        )}
+      </div>
       <div
         ref={ref}
         onScroll={onScroll}
