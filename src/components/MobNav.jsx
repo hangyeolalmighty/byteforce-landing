@@ -5,6 +5,7 @@ export function MobNav({ active, onNav }) {
   const items = [
     { id: "home", label: "Home", icon: "\u2b21", c: T.accent },
     { id: "services", label: "Services", icon: "\u25c7", c: T.purple },
+    { id: "solutions", label: "Solutions", icon: "\u25c6", c: T.green },
     { id: "work", label: "Work", icon: "\u25a6", c: T.gold },
     { id: "ai", label: "AI", icon: "\u25cf", c: T.pink },
     { id: "contact", label: "Contact", icon: "\u25ce", c: T.green },

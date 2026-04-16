@@ -38,6 +38,13 @@ export const SVC = [
     icon: "\u25c9",
     desc: "KR \u00b7 EN \u00b7 JP \u00b7 RU \u2014 4개국어 현지화 대응",
   },
+  {
+    name: "Digital Campaign",
+    kr: "디지털 캠페인",
+    color: T.gold,
+    icon: "\u25c7",
+    desc: "선거 캠페인 전략 기획 \u00b7 웹 플랫폼 구축 \u00b7 온라인 홍보 \u2014 대선/교육감선거 실전 경험",
+  },
 ];
 
 export const catColors = {

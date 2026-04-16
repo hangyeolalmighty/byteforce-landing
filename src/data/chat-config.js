@@ -60,6 +60,7 @@ export const FO = {
 export const SC = {
   home: "",
   services: "서비스를 살펴보고 계셨군요. 어떤 서비스가 관심 가세요?",
+  solutions: "솔루션을 살펴보고 계셨군요. VibeSec이나 Heavy Match에 대해 궁금한 점 있으세요?",
   work: "포트폴리오를 보고 계셨군요. 어떤 프로젝트가 궁금하세요?",
   process: "작업 프로세스를 살펴보셨네요. 궁금한 점이 있으세요?",
   contact: "연락처 페이지를 보셨네요. 바로 상담 시작해볼까요?",

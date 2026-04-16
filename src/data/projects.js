@@ -2,6 +2,16 @@ import { T } from "../theme";
 
 export const PJ = [
   {
+    name: "Heavy Match",
+    url: "https://heavy-match.vercel.app",
+    tags: ["Next.js", "Supabase", "Realtime", "PWA"],
+    color: T.green,
+    desc: "중장비 배차 매칭 플랫폼 \u2014 60초 실시간 매칭, 6개 역할, 자동 정산",
+    live: true,
+    cat: "Platform",
+    feat: true,
+  },
+  {
     name: "이순신 AI",
     url: "https://yisunsin.ai",
     tags: ["AI", "WebGL", "Interactive"],

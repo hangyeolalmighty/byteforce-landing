@@ -15,6 +15,7 @@ import { ServicesView } from "./views/ServicesView";
 import { WorkView } from "./views/WorkView";
 import { ProcessView } from "./views/ProcessView";
 import { ContactView } from "./views/ContactView";
+import { SolutionsView } from "./views/SolutionsView";
 
 const FONT_LINK =
   "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap";
@@ -49,6 +50,7 @@ export default function App() {
   const views = {
     home: <HomeView />,
     services: <ServicesView />,
+    solutions: <SolutionsView />,
     work: <WorkView />,
     process: <ProcessView />,
     contact: <ContactView />,
@@ -257,6 +259,12 @@ export default function App() {
                   icon: "\u25c7",
                   label: "SERVICES",
                   color: T.purple,
+                },
+                {
+                  id: "solutions",
+                  icon: "\u25c6",
+                  label: "SOLUTIONS",
+                  color: T.green,
                 },
                 {
                   id: "work",
